@@ -1,4 +1,4 @@
-const URL = "http://localhost:3003/products";
+const URL = "http://localhost:3005/products";
 
 export const fetchTodos = () =>
     fetch(URL).then((response) => {
