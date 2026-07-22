@@ -5,10 +5,14 @@ import {
     updateTodo,
     deleteTodoApi,
 } from "../api/todos";
+import { useSearch } from "./use-search";
+import { useSort } from "./use-sort";
 
 export const useTodos = () => {
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const { searchQuery, setSearchQuery, filteredTodos } = useSearch(todos);
+    const { sortOrder, setSortOrder, sortedTodos } = useSort(filteredTodos);
 
     useEffect(() => {
         fetchTodos()
@@ -43,10 +47,20 @@ export const useTodos = () => {
     const deleteTodo = (id) => {
         deleteTodoApi(id)
             .then(() =>
-                setTodos((prev) => prev.filter((todo) => todo.id !== id))
+                setTodos((prev) => prev.filter((todo) => todo.id !== id)),
             )
             .catch(console.error);
     };
 
-    return { todos, isLoading, addTodo, editTodo, deleteTodo }
+    return {
+        todos: sortedTodos,
+        isLoading,
+        addTodo,
+        editTodo,
+        deleteTodo,
+        searchQuery,
+        setSearchQuery,
+        sortOrder,
+        setSortOrder,
+    };
 };

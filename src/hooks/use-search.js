@@ -1,28 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-export const useSearch = () => {
-    const [searchValue, setSearchValue] = useState("");
-    const [searchQuery, setSearchQuery] = useState("");
-    const [isSearching, setIsSearching] = useState(false);
+export const useSearch = todos => {
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const performSearch = (value) => {
-        setIsSearching(true);
-        setSearchQuery(value);
-        setSearchValue("");
-    };
-
-    const cancelSearch = () => {
-        setIsSearching(false);
-        setSearchValue("");
-        setSearchQuery("");
-    };
+    const filteredTodos = useMemo(() =>
+        todos.filter(todo => todo.text.toLowerCase().includes(searchQuery.toLowerCase())),
+        [todos, searchQuery]
+    )
 
     return {
-        searchValue,
-        setSearchValue,
         searchQuery,
-        isSearching,
-        performSearch,
-        cancelSearch,
+        setSearchQuery,
+        filteredTodos
     };
 };

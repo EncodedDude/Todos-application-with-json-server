@@ -1,16 +1,25 @@
+import { useState, useEffect } from "react";
 import { Button } from "../button/button";
 import styles from "./search-bar.module.css";
 
-export const SearchBar = ({
-    value,
-    onChange,
-    onSearch,
-    isSearching,
-    onCancel,
-}) => {
+export const SearchBar = ({ onChange }) => {
+    const [searchValue, setSearchValue] = useState("");
+
+    useEffect(() => {
+        if (searchValue === "") {
+            onChange("");
+        }
+    }, [searchValue, onChange]);
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        onSearch(value);
+        if (!searchValue) return;
+        onChange(searchValue);
+    };
+
+    const resetSearch = () => {
+        setSearchValue("");
+        onChange("");
     };
 
     return (
@@ -19,11 +28,11 @@ export const SearchBar = ({
                 type="text"
                 placeholder="Введите фразу"
                 className={styles.input}
-                value={value}
-                onChange={(event) => onChange(event.target.value)}
+                value={searchValue}
+                onChange={({ target }) => setSearchValue(target.value)}
             />
             <Button type="submit">Найти</Button>
-            {isSearching && <Button onClick={onCancel}>Отменить</Button>}
+            {searchValue && <Button onClick={resetSearch}>Отменить</Button>}
         </form>
     );
 };
